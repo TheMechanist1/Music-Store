@@ -1,6 +1,32 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
-}
-<h1>@ViewData["Title"]</h1>
+﻿@model List<ShoppingCartItem>
 
-<p>Use this page to detail your site's privacy policy.</p>
+@{
+    var presetSongs = new List<dynamic>
+    {
+        new { Id = 1, Title = "Song 1", Artist = "Artist 1", Price = 9.99 },
+        new { Id = 2, Title = "Song 2", Artist = "Artist 2", Price = 7.99 },
+        new { Id = 3, Title = "Song 3", Artist = "Artist 3", Price = 12.99 },
+        // Another list of preset songs
+    };
+}
+
+<h1>Shopping Cart</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var song in presetSongs)
+        {
+            <tr>
+                <td>@song.Title</td>
+                <td>Quantity Placeholder</td> <!-- Just a placeholder for now -->
+                <td>@song.Price</td>
+            </tr>
+        }
+    </tbody>
+</table>

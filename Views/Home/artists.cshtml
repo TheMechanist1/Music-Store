@@ -1,0 +1,59 @@
+﻿@{
+    var presetSongs = new List<dynamic>
+    {
+        new { Id = 1, Title = "Song 1", Artist = "Artist 1", Price = 9.99 },
+        new { Id = 2, Title = "Song 2", Artist = "Artist 1", Price = 7.99 },
+        new { Id = 3, Title = "Song 3", Artist = "Artist 2", Price = 12.99 },
+        // Yes another premade list
+    };
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Artists</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Artists Page</h1>
+
+    <h2>Songs</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Artist</th>
+                <th>Add to Cart</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var song in presetSongs)
+            {
+                <tr>
+                    <td>@song.Title</td>
+                    <td>@song.Artist</td>
+                    <td>
+                        <button onclick="addToCart(@song.Id)">Add to Cart</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <script>
+        function addToCart(songId) {
+            $.ajax({
+                type: 'POST',
+                url: '/ShoppingCart/AddToCart', // not the right URL or anything rn
+                data: { songId: songId },
+                success: function (response) {
+                    console.log('Song added to cart successfully.');
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
