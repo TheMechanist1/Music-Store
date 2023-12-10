@@ -9,6 +9,19 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+@using (Html.BeginForm("Index", "Songs", FormMethod.Get))
+{
+    <p>
+        Search: <input type="text" name="searchString" />
+        <select name="searchField">
+            <option value="genre">Genre</option>
+            <option value="performer">Performer</option>
+        </select>
+        <input type="submit" value="Search" />
+    </p>
+}
+
 <table class="table">
     <thead>
         <tr>

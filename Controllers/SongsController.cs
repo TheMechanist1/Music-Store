@@ -8,8 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Music_Store.Data;
 using Music_Store.Models;
 
-namespace Music_Store.Controllers
-{
+
+namespace Music_Store.Controllers {
+
+
     public class SongsController : Controller
     {
         private readonly Music_StoreContext _context;
@@ -20,12 +22,26 @@ namespace Music_Store.Controllers
         }
 
         // GET: Songs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, string searchField)
         {
-              return _context.Song != null ? 
-                          View(await _context.Song.ToListAsync()) :
-                          Problem("Entity set 'Music_StoreContext.Song'  is null.");
+            var songsQuery = _context.Song.AsQueryable();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                if (searchField == "genre")
+                {
+                    songsQuery = songsQuery.Where(s => s.Genre.Contains(searchString));
+                }
+                else if (searchField == "performer")
+                {
+                    songsQuery = songsQuery.Where(s => s.Performer.Contains(searchString));
+                }
+            }
+
+            var songs = await songsQuery.ToListAsync();
+            return View(songs);
         }
+
 
         // GET: Songs/Details/5
         public async Task<IActionResult> Details(int? id)

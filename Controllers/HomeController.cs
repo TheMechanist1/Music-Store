@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Music_Store.Data;
 using Music_Store.Models;
 using System.Diagnostics;
 
@@ -7,15 +9,31 @@ namespace Music_Store.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly Music_StoreContext _context;
+        public HomeController(ILogger<HomeController> logger, Music_StoreContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string searchString, string searchField)
         {
-            return View();
+            var songsQuery = _context.Song.AsQueryable();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                if (searchField == "genre")
+                {
+                    songsQuery = songsQuery.Where(s => s.Genre.Contains(searchString));
+                }
+                else if (searchField == "performer")
+                {
+                    songsQuery = songsQuery.Where(s => s.Performer.Contains(searchString));
+                }
+            }
+
+            var songs = await songsQuery.ToListAsync();
+            return View(songs);
         }
 
         public IActionResult Privacy()
