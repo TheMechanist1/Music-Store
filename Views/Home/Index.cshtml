@@ -1,8 +1,41 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    var predefinedGenres = new List<string> { "Rock", "Pop", "Jazz", "Classical", "Hip Hop", "Electronic" };
+
+    var presetSongs = new List<dynamic>
+    {
+        new { Title = "Song 1", Artist = "Artist 1" },
+        new { Title = "Song 2", Artist = "Artist 2" },
+        // placeholder presets
+    };
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h1>Browse Music</h1>
+
+<form id="musicForm">
+    <label for="genres">Select Genre:</label>
+    <select id="genres" name="selectedGenre">
+        <option value="">All Genres</option>
+        @foreach (var genre in predefinedGenres)
+        {
+            <option value="@genre">@genre</option>
+        }
+    </select>
+    <button type="button" onclick="submitForm()">Submit</button>
+</form>
+
+<ul id="artistsList" style="display:none;">
+    @foreach (var song in presetSongs)
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="artists">Artist</a>
+        </li>
+    }
+</ul>
+
+<script>
+    function submitForm() {
+        var selectedGenre = document.getElementById('genres').value;
+
+        document.getElementById('artistsList').style.display = 'block';
+    }
+</script>

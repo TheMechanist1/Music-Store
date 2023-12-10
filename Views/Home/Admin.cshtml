@@ -1,0 +1,42 @@
+﻿@{
+    var genres = new List<string> { "Rock", "Pop", "Jazz", "Classical", "Hip Hop", "Electronic" };
+
+    var records = new List<dynamic>
+    {
+        new { Id = 1, Name = "Record 1"},
+        new { Id = 2, Name = "Record 2"},
+        new { Id = 3, Name = "Record 3"},
+        // Random premade list again
+    };
+}
+
+<h1>Administrator Panel</h1>
+
+<form method="post" asp-action="AddRecord">
+    <input type="text" name="newRecordName" placeholder="New Record Name" />
+    <button type="submit">Add Record</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var record in records)
+        {
+            <tr>
+                <td>@record.Name</td>
+                <td>
+                    <!-- Placeholder delete button -->
+                    <button type="button">Delete</button>
+
+                    <!-- Placeholder edit button -->
+                    <button type="button">Edit</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
