@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public Models.Genre Genre { get; set; }
-        public Models.Performer Performer { get; set; }
+        public string Genre { get; set; }
+        public string Performer { get; set; }
     }
 }
