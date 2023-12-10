@@ -2,7 +2,7 @@
 {
     public class ShoppingCartItem
     {
-        public int SongId { get; set; }
+        public Models.Song Song { get; set; }
         public int Quantity { get; set; }
     }
 }
