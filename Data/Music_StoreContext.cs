@@ -15,5 +15,14 @@ namespace Music_Store.Data
         }
 
         public DbSet<Music_Store.Models.Song> Song { get; set; } = default!;
+        public DbSet<Music_Store.Models.ShoppingCart> ShoppingCarts { get; set; } = default!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ShoppingCart>()
+                .HasMany(c => c.Items)
+                .WithOne(i => i.ShoppingCart)
+                .HasForeignKey(i => i.ShoppingCartId);
+        }
     }
 }

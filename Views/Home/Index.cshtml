@@ -54,19 +54,12 @@
                     @Html.DisplayFor(modelItem => item.Performer)
                 </td>
                 <td>
-                    <a asp-action="AddToCart" asp-route-id="@item.Id">Add</a>
-
+                    <form asp-action="AddToCart" asp-controller="Songs" method="post">
+                        <input type="hidden" name="songId" value="@item.Id" />
+                        <input type="submit" value="Add to Cart" />
+                    </form>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
-
-<script>
-    function submitForm() {
-        var selectedGenre = document.getElementById('genres').value;
-
-        document.getElementById('artistsList').style.display = 'block';
-    }
-</script>

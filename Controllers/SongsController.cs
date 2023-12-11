@@ -15,10 +15,12 @@ namespace Music_Store.Controllers {
     public class SongsController : Controller
     {
         private readonly Music_StoreContext _context;
+        private readonly ShoppingCart _shoppingCart;
 
-        public SongsController(Music_StoreContext context)
+        public SongsController(Music_StoreContext context, ShoppingCart shoppingCart)
         {
             _context = context;
+            _shoppingCart = shoppingCart;
         }
 
         // GET: Songs
@@ -40,6 +42,31 @@ namespace Music_Store.Controllers {
 
             var songs = await songsQuery.ToListAsync();
             return View(songs);
+        }
+
+        public IActionResult AddToCart(int songId)
+        {
+            var selectedSong = _context.Song.FirstOrDefault(s => s.Id == songId);
+            if (selectedSong != null)
+            {
+                var shoppingCartItem = new ShoppingCartItem { Song = selectedSong };
+
+                if (_context.ShoppingCarts.Local.Count == 0)
+                {
+                    _context.ShoppingCarts.Local.Add(new ShoppingCart());
+                }
+
+                _context.ShoppingCarts.Local.First().AddItem(shoppingCartItem); //.AddItem(shoppingCartItem);
+                Console.WriteLine("Yests");
+                try
+                {
+                    var changes = _context.SaveChanges();
+                } catch
+                {
+                    Console.Write("");
+                }
+            }
+            return RedirectToAction("ViewCart", "ShoppingCart"); // Redirect to the desired view
         }
 
 
@@ -176,4 +203,32 @@ namespace Music_Store.Controllers {
           return (_context.Song?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
+}
+
+public class ShoppingCartController : Controller
+{
+    private readonly Music_StoreContext _shoppingCart;
+
+    public ShoppingCartController(Music_StoreContext context)
+    {
+        _shoppingCart = context;
+    }
+
+    public async Task<IActionResult> ViewCart()
+    {
+        // Fetch the latest shopping cart and its items from the database
+        var shoppingCart = await _shoppingCart.ShoppingCarts
+                                .Include(c => c.Items)
+                                .ThenInclude(i => i.Song)
+                                .ToListAsync();
+
+        if (shoppingCart == null)
+        {
+            return View(new ShoppingCart()); // or redirect to an error page or a relevant action
+        }
+
+        // Pass the items to the view
+        return View(shoppingCart);
+    }
+
 }
