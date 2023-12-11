@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<Music_Store.Models.Song>
+
+@{
     var predefinedGenres = new List<string> { "Rock", "Pop", "Jazz", "Classical", "Hip Hop", "Electronic" };
 
     var presetSongs = new List<dynamic>
@@ -11,31 +13,53 @@
 
 <h1>Browse Music</h1>
 
-<form id="musicForm">
-    <label for="genres">Select Genre:</label>
-    <select id="genres" name="selectedGenre">
-        <option value="">All Genres</option>
-        @foreach (var genre in predefinedGenres)
+@using (Html.BeginForm("Index", "Home", FormMethod.Get))
+{
+    <p>
+        Search: <input type="text" name="searchString" />
+        <select name="searchField">
+            <option value="genre">Genre</option>
+            <option value="performer">Performer</option>
+        </select>
+        <input type="submit" value="Search" />
+    </p>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Performer)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
         {
-            <option value="@genre">@genre</option>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Performer)
+                </td>
+                <td>
+                    <form asp-action="AddToCart" asp-controller="Songs" method="post">
+                        <input type="hidden" name="songId" value="@item.Id" />
+                        <input type="submit" value="Add to Cart" />
+                    </form>
+                </td>
+            </tr>
         }
-    </select>
-    <button type="button" onclick="submitForm()">Submit</button>
-</form>
-
-<ul id="artistsList" style="display:none;">
-    @foreach (var song in presetSongs)
-    {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="artists">Artist</a>
-        </li>
-    }
-</ul>
-
-<script>
-    function submitForm() {
-        var selectedGenre = document.getElementById('genres').value;
-
-        document.getElementById('artistsList').style.display = 'block';
-    }
-</script>
+    </tbody>
+</table>
